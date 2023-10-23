@@ -12,7 +12,7 @@ void Neuron::dendrite(bool input_pulse[8]){
         this->axon = 1;
     }
     else{
-        this->regulation = 0;
+        this->axon = 0;
     }
 
 } 
@@ -50,10 +50,10 @@ void Neuron::regulatory(unsigned int regulate_signal[8]){
         this->stimulation();
     }
     else{
-        this->stimulate_signal = 0;
-        this->inhibit_signal = 0;
         this->consolidate();
     }
+    this->inhibit_signal = 0;
+    this->stimulate_signal = 0;
     
 }
 
@@ -83,14 +83,12 @@ void Neuron::consolidate(){
 void Neuron::stimulation(){
     // occur when the neuron is inactivated and received a stimulation signal from lower layer
     
-    // this->electropositivity += 1; // increase the electropositivity
+    // increase the electropositivity
     if(this->Vth > 0){
-        // this->Vth = this->Vth - this->electropositivity;
-        // this->electronegativity = 0; 
         this->Vth -= 1;
     }
     if (this->voltage > this->Vth){ 
-        // the regulation is not necessary because the neuron is already activated
+        // the regulation=0 here may not necessary because the neuron is already activated
         if (this->axon){
             this->regulation = 1;
         }
@@ -115,7 +113,7 @@ void Neuron::stimulation(){
                 this->regulation = 0;
             }
         }
-        else{ // stimulate the higher layer
+        else{ // still can activate? -> stimulate the higher layer
             this->regulation = 3;
         }
     }
@@ -124,7 +122,7 @@ void Neuron::stimulation(){
 void Neuron::inhibition(){
     // occur when the neuron is activated and received a inhibition signal from lower layer    
     
-    if(this->Vth < 128){
+    if(this->Vth < 127){
         this->Vth += 1;
     }
     if (this->voltage < this->Vth){

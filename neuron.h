@@ -9,8 +9,6 @@
 class Neuron{
 
     private:  
-        // unsigned int electronegativity;
-        // unsigned int electropositivity;
         unsigned int Vth = 8;
         unsigned int stimulate_signal=0;
         unsigned int inhibit_signal=0;
@@ -19,9 +17,7 @@ class Neuron{
     public:
         bool input_mem[8];
         bool axon; //neuron is active or inhibited
-        // unsigned int axon_terminal[4][2];
-        // unsigned int same_level_receptor[4];
-        // unsigned int deeper_level_receptor[4];
+        
         Neuron();
 
         unsigned int voltage;
@@ -45,6 +41,9 @@ Neuron::Neuron(){
     // this->electropositivity = 0;
     this->stimulate_signal = 0;
     this->inhibit_signal = 0;
+    for (int i=0; i<8; i++){
+        this->input_mem[i] = 0;
+    }
 
 }
 
