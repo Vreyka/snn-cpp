@@ -89,7 +89,8 @@ void Neuron::stimulation(){
         // this->electronegativity = 0; 
         this->Vth -= 1;
     }
-    if (this->voltage > this->Vth){
+    if (this->voltage > this->Vth){ 
+        // the regulation is not necessary because the neuron is already activated
         if (this->axon){
             this->regulation = 1;
         }
@@ -105,17 +106,54 @@ void Neuron::stimulation(){
                 this->voltage += this->synap[i].sensitive*this->input_mem[i];
             }
         }
-        if (this->voltage <= this->Vth){ // stimulate the higher layer
+        
+        if (this->voltage > this->Vth){
+            if (this->axon){
+                this->regulation = 1;
+            }
+            else if (this->axon==0){
+                this->regulation = 0;
+            }
+        }
+        else{ // stimulate the higher layer
             this->regulation = 3;
         }
-        else if (this->axon){
+    }
+}
+
+void Neuron::inhibition(){
+    // occur when the neuron is activated and received a inhibition signal from lower layer    
+    
+    if(this->Vth < 128){
+        this->Vth += 1;
+    }
+    if (this->voltage < this->Vth){
+        if (this->axon){
             this->regulation = 1;
         }
         else if (this->axon==0){
             this->regulation = 0;
         }
     }
-
-
-
+    else{ //decrease the sensitivity of the synap
+        this->voltage = 0;
+        for(int i=0;i<8;i++){
+            if (this->synap[i].sensitive>0){
+                this->synap[i].sensitive -= 1;
+                this->voltage += this->synap[i].sensitive*this->input_mem[i];
+            }
+        }
+        
+        if (this->voltage < this->Vth){
+            if (this->axon){
+                this->regulation = 1;
+            }
+            else if (this->axon==0){
+                this->regulation = 0;
+            }
+        }
+        else{ // inhibit the higher layer
+            this->regulation = 2;
+        }
+    }
 }
