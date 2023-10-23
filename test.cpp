@@ -7,21 +7,25 @@ class x{
 };
 class y{
     public:
-        x a1[2][2] = {{{1}, {2}} ,{{3}, {4}}};
-        x a2[2][2] = {{{6}, {7}} ,{{8}, {9}}};
-        x (*al[2]); // al is an array of pointers to 2D arrays
-
-        y() {
-            this->al = &this->a1; // Assign the address of a1 to the first element of al
-            this->al = &this->a2; // Assign the address of a2 to the second element of al
-        }
+        x *xx;
 };
 
+class z{
+    public:
+        x a[2][2] = {{1,2},{3,4}};
+        x a2[3][2] = {{6, 7} ,{8, 9}, {10, 11}};
+        x * b[2];
+
+        z(){
+            this->b[0] = *this->a;
+            this->b[1] = *this->a2;
+        }
+
+        x * b2[2] = {*this->a, *this->a2};
+};
 int main(){
-    int a[3];
-    y c;
-    // c.a[0][1].a = 0;
-    cout<<c.al[0][0][0]->a<<endl;
+    z c;
+    cout << c.b[1][5].a << endl;
 
 
 }
