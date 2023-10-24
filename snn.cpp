@@ -49,11 +49,22 @@ void SNN::forward(bool *input,int lenth_input){ //array[28*28]
 }
 
 void SNN::data_in(bool *input, int lenth_input, int layer, int row, int col, int expain){
-
+    //voltage summary for the input data
+    //each neuron in layer
     for (int i=0; i<row; i++){
         for (int j=0; j<col; j++){
 
-            this->layers[layer][i*col+j].dendrite(input);
+            //each data in input
+            for(int ipr=0; ipr<lenth_input-expain; ipr++){
+                for(int ipc= 0; ipc<lenth_input-expain; ipc++){
+
+                    //each 2x2 grid
+                    for(int k = 0; k<4; k++){
+                        this->mem_forward_higher[k] = input[(i*expain+ipr)*lenth_input+j*expain+ipc];   
+                    }
+                }
+            }
+            // this->layers[layer][i*col+j].dendrite(input);
         }
     }
 }
