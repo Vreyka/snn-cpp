@@ -1,36 +1,32 @@
 #ifndef SNN_H
 #define SNN_H
-#include<neuronlib.h>
+#include "neuronlib.h"
 #include<omp.h>
 
-class Layer{
-    public:
-        Neuron *neuron_matrix;
-};
 
 class SNN{
     public:
 
-        Neuron layer0[27][27];
-        Neuron layer1[20][20];
-        Neuron layer2[12][12];
-        Neuron layer3[4][4];
+        
         // ... can be more layers
         Neuron spine[10][1]; //classification
 
-        Neuron * layer[5];
+        Neuron * layers[5];
+        bool *shadow_layers[5];
 
         // Neuron * layer[5] = {*this->layer0, *this->layer1, *this->layer2, *this->layer3, *this->spine};
         
 
         unsigned int expain_scheduler[5] = {1, 7, 8, 8, 1};
-        unsigned int row_scheduler[5] = {27, 20, 12, 4, 10};
-        unsigned int col_scheduler[5] = {27, 20, 12, 4, 1};
+        unsigned int col_scheduler[5] = {27, 20, 12, 4, 10};
+        unsigned int row_scheduler[5] = {27, 20, 12, 4, 1};
+        unsigned int last_layer = 5;
 
         bool mem_forward_higher[4];
         bool mem_forward_counterpart[4];
         unsigned int mem_backward_lower[4];
         unsigned int mem_backward_counterpart[4];
+        bool *working_mem;
         
 
         SNN();
@@ -41,16 +37,17 @@ class SNN{
             unsigned int *expain_scheduler
         );
 
-        void forward(bool input[28][28]);
+        void forward(bool *input, int lenth_input);
         void backward(unsigned int regulate_signal[10][4]);
 
-        void connect(int row, int col, int expain);
+        void data_in(bool *input, int lenth_input, int layer, int row, int col, int expain);
+        void connect(int lenth_input, int layer, int row, int col, int expain);
+        void classify();
+        
 
 };
 
-SNN::SNN(){
-    this->layer[0] = *this->layer0;
-//     this->layer->neuron_matrix = {this->layer0, this->layer1, this->layer2, this->layer3, this->spine};
-}
+
+
 
 #endif

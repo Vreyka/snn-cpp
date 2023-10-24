@@ -2,7 +2,7 @@
 #define NEURON_H
 #include<iostream>
 // #include<dendrite.h>
-#include<synap.h>
+#include "synap.h"
 #include<omp.h>
 
 

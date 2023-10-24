@@ -1,4 +1,4 @@
-#include<neuron.h>
+#include "neuron.h"
 
 void Neuron::dendrite(bool input_pulse[8]){
     this->voltage = 0;
