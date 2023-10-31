@@ -11,22 +11,28 @@ class SNN{
         // ... can be more layers
         Neuron spine[10][1]; //classification
 
-        Neuron * layers[5];
-        bool *shadow_layers[5];
+        Neuron * layers[6];
+        bool *shadow_layers[6];
 
         // Neuron * layer[5] = {*this->layer0, *this->layer1, *this->layer2, *this->layer3, *this->spine};
         
 
-        unsigned int expain_scheduler[5] = {1, 7, 8, 8, 1};
-        unsigned int col_scheduler[5] = {27, 20, 12, 4, 10};
-        unsigned int row_scheduler[5] = {27, 20, 12, 4, 1};
+        unsigned int expain_scheduler[5] = {1, 0, 3, 1, 1};
+        unsigned int stride_scheduler[5] = {1, 1, 3, 2, 2};
+        unsigned int col_scheduler[5] = {27, 55, 18, 9, 4};
+        unsigned int row_scheduler[5] = {27, 55, 18, 9, 4};
         unsigned int last_layer = 5;
 
-        bool mem_forward_higher[4];
-        bool mem_forward_counterpart[4];
-        unsigned int mem_backward_lower[4];
-        unsigned int mem_backward_counterpart[4];
+        // bool mem_forward_higher[4];
+        // bool mem_forward_counterpart[4];
+        // unsigned int mem_backward_lower[4];
+        // unsigned int mem_backward_counterpart[4];
+
+        bool mem_forward[13];
+        unsigned int mem_backward[13];
+
         bool *working_mem;
+        unsigned int stable_time = 3;
         
 
         SNN();

@@ -34,8 +34,17 @@ class z{
         x * b2[2] = {*this->a, *this->a2};
 };
 int main(){
-    SNN snn;
-    cout << snn.shadow_layers[0][0] << endl;
+    x k[2][2];
+    for (int i = 0; i<2; i++){
+        for (int j = 0; j<2; j++){
+            k[i][j].a = i+j;
+            cout<< k[i][j].a << endl;
+        }
+    }
+    // k[0][0].a = 1;
+    z zz(*k);
+
+    cout << zz.bz[3].a << endl;
 
 
 }

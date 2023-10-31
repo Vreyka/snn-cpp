@@ -1,9 +1,9 @@
 #include "neuron.h"
 
-void Neuron::dendrite(bool input_pulse[8]){
+void Neuron::dendrite(bool input_pulse[13]){
     this->voltage = 0;
 
-    for(int i=0;i<8;i++){
+    for(int i=0;i<13;i++){
         this->input_mem[i] = input_pulse[i];
         this->input_mem[i] = this->input_mem[i] * this->synap[i].sensitive;
         this->voltage += input_pulse[i];
@@ -17,7 +17,7 @@ void Neuron::dendrite(bool input_pulse[8]){
 
 } 
 
-void Neuron::regulatory(unsigned int regulate_signal[8]){
+void Neuron::regulatory(unsigned int regulate_signal[13]){
 
     /* 
         regulate_signal[i] = [0, 1, 2, 3]
@@ -33,7 +33,7 @@ void Neuron::regulatory(unsigned int regulate_signal[8]){
         and then there have no connection between them yet
         and more: the neuron is working fine and no need to be regulated
     */
-    for(int i=0;i<8;i++)
+    for(int i=0;i<13;i++)
     {
         if(regulate_signal[i]==2){
             this->inhibit_signal += 1;
@@ -60,7 +60,7 @@ void Neuron::regulatory(unsigned int regulate_signal[8]){
 void Neuron::consolidate(){
     if (this->axon){
         this->regulation = 1;
-        for(int i=0;i<8;i++){
+        for(int i=0;i<13;i++){
             if((this->input_mem[i]) and (this->synap[i].sensitive)<15){
                 this->synap[i].sensitive += 1;
             }
@@ -72,7 +72,7 @@ void Neuron::consolidate(){
     }
     else if (this->axon==0){
         this->regulation = 0;
-        for(int i=0;i<8;i++){
+        for(int i=0;i<13;i++){
             if (this->synap[i].sensitive>0){
                 this->synap[i].sensitive -= 1;
             }
@@ -98,7 +98,7 @@ void Neuron::stimulation(){
     }
     else{ //increase the sensitivity of the synap
         this->voltage = 0;
-        for(int i=0;i<8;i++){
+        for(int i=0;i<13;i++){
             if (this->synap[i].sensitive<15){
                 this->synap[i].sensitive += 1;
                 this->voltage += this->synap[i].sensitive*this->input_mem[i];
@@ -135,7 +135,7 @@ void Neuron::inhibition(){
     }
     else{ //decrease the sensitivity of the synap
         this->voltage = 0;
-        for(int i=0;i<8;i++){
+        for(int i=0;i<13;i++){
             if (this->synap[i].sensitive>0){
                 this->synap[i].sensitive -= 1;
                 this->voltage += this->synap[i].sensitive*this->input_mem[i];

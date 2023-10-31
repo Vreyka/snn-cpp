@@ -2,13 +2,11 @@
 
 SNN::SNN(){
 
-    for(int i=0; i<4; i++){
-        this->mem_forward_counterpart[i] = 0;
-        this->mem_forward_higher[i] = 0;
-        this->mem_backward_counterpart[i] = 0;
-        this->mem_backward_lower[i] = 0;
+    for(int i=0; i<8; i++){
+        this->mem_forward[i] = 0;
+        this->mem_backward[i] = 0;
     }
-    for (int i=0; i<5; i++){
+    for (int i=0; i<6; i++){
         this->layers[i] = new Neuron[this->row_scheduler[i]*this->col_scheduler[i]]; 
         this->shadow_layers[i] = new bool[this->row_scheduler[i]*this->col_scheduler[i]];
     }
@@ -36,7 +34,7 @@ void SNN::forward(bool *input,int lenth_input){ //array[28*28]
         //classification layer
         else if (layer == this->last_layer-1)
         {
-            /* code */
+            this->classify();
         }
         
         // this->connect(this->working_mem, lenth_input, layer, row_lenth, col_lenth, expain_lenth);
@@ -49,22 +47,39 @@ void SNN::forward(bool *input,int lenth_input){ //array[28*28]
 }
 
 void SNN::data_in(bool *input, int lenth_input, int layer, int row, int col, int expain){
+
     //voltage summary for the input data
-    //each neuron in layer
-    for (int i=0; i<row; i++){
-        for (int j=0; j<col; j++){
-
-            //each data in input
-            for(int ipr=0; ipr<lenth_input-expain; ipr++){
-                for(int ipc= 0; ipc<lenth_input-expain; ipc++){
-
-                    //each 2x2 grid
-                    for(int k = 0; k<4; k++){
-                        this->mem_forward_higher[k] = input[(i*expain+ipr)*lenth_input+j*expain+ipc];   
-                    }
+    //data in input to the nn
+    for(int i=0; i<lenth_input-expain; i++){
+        for(int j= 0; j<lenth_input-expain; j++){
+            //each 2x2 grid
+            for(int h = 0; h<2; h++){
+                for(int w = 0; w<2; w++){
+                    //put data to mem_forward
+                    this->mem_forward[h*2+w] = input[(i+h)*lenth_input+(j+w)];
                 }
             }
-            // this->layers[layer][i*col+j].dendrite(input);
+            //y = f(x)
+            this->layers[layer][i*col+j].dendrite(this->mem_forward);
+        }
+    }
+
+    //voltage summary for the same lever layer
+    for (int time= 0; time< this->stable_time; time++){
+        for(int i=0; i<row; i++){
+            for(int j= 0; j<col; j++){
+                
+                if (i>0){
+                    this->mem_forward[4] = this->layers[layer][(i-1)*col+j].axon;
+                }
+                if (j>0){
+                    this->mem_forward[5] = this->layers[layer][i*col+(j-1)].axon;
+                }
+                this->mem_forward[6] = this->layers[layer][(i+1)*col+j].axon;
+                this->mem_forward[7] = this->layers[layer][i*col+(j+1)].axon;
+                //y = f(x)
+                this->layers[layer][i*col+j].dendrite(this->mem_forward);
+            }
         }
     }
 }
